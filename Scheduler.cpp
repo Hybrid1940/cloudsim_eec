@@ -8,7 +8,7 @@
 #include "Scheduler.hpp"
 
 static bool migrating = false;
-static unsigned active_machines = 16;
+static unsigned active_machines = Machine_GetTotal();
 
 void Scheduler::Init() {
     // Find the parameters of the clusters
@@ -19,16 +19,17 @@ void Scheduler::Init() {
     //      Get the number of CPUs
     //      Get if there is a GPU or not
     // 
+
     SimOutput("Scheduler::Init(): Total number of machines is " + to_string(Machine_GetTotal()), 3);
     SimOutput("Scheduler::Init(): Initializing scheduler", 1);
-    for(unsigned i = 0; i < active_machines; i++)
-        vms.push_back(VM_Create(LINUX, X86));
+    // for(unsigned i = 0; i < active_machines; i++)
+    //     vms.push_back(VM_Create(LINUX, Machine_GetInfo(i).cpu));
     for(unsigned i = 0; i < active_machines; i++) {
         machines.push_back(MachineId_t(i));
-    }    
-    for(unsigned i = 0; i < active_machines; i++) {
-        VM_Attach(vms[i], machines[i]);
     }
+    // for(unsigned i = 0; i < active_machines; i++) {
+    //     VM_Attach(vms[i], machines[i]);
+    // }
 
     bool dynamic = false;
     if(dynamic)
@@ -64,6 +65,15 @@ void Scheduler::NewTask(Time_t now, TaskId_t task_id) {
     // Turn on a machine, migrate an existing VM from a loaded machine....
     //
     // Other possibilities as desired
+
+    //TODO
+    TaskInfo_t t = GetTaskInfo(task_id);
+    for(int i = 0; i < active_machines; i++) {
+        if (Machine_GetInfo(i).active_vms == 0) {
+
+        }
+    }
+    //END OF TODO
     Priority_t priority = (task_id == 0 || task_id == 64)? HIGH_PRIORITY : MID_PRIORITY;
     if(migrating) {
         VM_AddTask(vms[0], task_id, priority);
