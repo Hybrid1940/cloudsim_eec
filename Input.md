@@ -29,7 +29,7 @@ task class:
         End time : 800000
         Inter arrival: 6000
         Expected runtime: 2000000
-        Memory: 8
+        Memory: 512
         VM type: LINUX
         GPU enabled: no
         SLA type: SLA0
